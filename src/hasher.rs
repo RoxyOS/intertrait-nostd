@@ -1,6 +1,6 @@
-use std::convert::TryInto;
-use std::hash::{BuildHasherDefault, Hasher};
-use std::mem::size_of;
+use core::convert::TryInto;
+use core::hash::{BuildHasherDefault, Hasher};
+use core::mem::size_of;
 
 /// A simple `Hasher` implementation tuned for performance.
 #[derive(Default)]

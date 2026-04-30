@@ -1,3 +1,4 @@
+#![no_std]
 //! A library providing direct casting among trait objects implemented by a type.
 //!
 //! In Rust, an object of a sub-trait of [`Any`] can be downcast to a concrete type
@@ -54,15 +55,18 @@
 //! [`CastFrom`]: ./trait.CastFrom.html
 //! [`CastFromSync`]: ./trait.CastFromSync.html
 //! [`cast`]: ./cast/index.html
-//! [`Any`]: https://doc.rust-lang.org/std/any/trait.Any.html
-//! [`Arc`]: https://doc.rust-lang.org/std/sync/struct.Arc.html
-use std::any::{Any, TypeId};
-use std::collections::HashMap;
-use std::rc::Rc;
-use std::sync::Arc;
+//! [`Any`]: https://doc.rust-lang.org/core/any/trait.Any.html
+//! [`Arc`]: https://doc.rust-lang.org/alloc/sync/struct.Arc.html
+extern crate alloc;
 
+use alloc::boxed::Box;
+use alloc::rc::Rc;
+use alloc::sync::Arc;
+use core::any::{Any, TypeId};
+
+use hashbrown::HashMap;
 use linkme::distributed_slice;
-use once_cell::sync::Lazy;
+use spin::Lazy;
 
 pub use intertrait_macros::*;
 
@@ -73,6 +77,12 @@ mod hasher;
 
 #[doc(hidden)]
 pub type BoxedCaster = Box<dyn Any + Send + Sync>;
+
+#[doc(hidden)]
+pub mod __private {
+    pub use alloc::boxed::Box;
+    pub use linkme;
+}
 
 #[cfg(doctest)]
 doc_comment::doctest!("../README.md");
@@ -281,6 +291,9 @@ impl CastFromSync for dyn Any + Sync + Send + 'static {
         self
     }
 }
+
+#[cfg(test)]
+extern crate std;
 
 #[cfg(test)]
 mod tests {

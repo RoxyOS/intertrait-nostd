@@ -1,5 +1,6 @@
+use alloc::sync::Arc;
+
 use crate::{caster, CastFromSync};
-use std::sync::Arc;
 
 /// A trait that is blanket-implemented for traits extending `CastFrom` to allow for casting
 /// of a trait object for it behind an `Rc` to a trait object for another trait

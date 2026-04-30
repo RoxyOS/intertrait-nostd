@@ -1,10 +1,13 @@
 # Intertrait
 
-![Build Status](https://github.com/CodeChain-io/intertrait/workflows/ci/badge.svg)
-[![Latest Version](https://img.shields.io/crates/v/intertrait.svg)](https://crates.io/crates/intertrait)
-[![Rust Documentation](https://img.shields.io/badge/api-rustdoc-blue.svg)](https://docs.rs/intertrait)
+![Build Status](https://github.com/RoxyOS/intertrait-nostd/workflows/ci/badge.svg)
+[![Latest Version](https://img.shields.io/crates/v/intertrait-nostd.svg)](https://crates.io/crates/intertrait-nostd)
+[![Rust Documentation](https://img.shields.io/badge/api-rustdoc-blue.svg)](https://docs.rs/intertrait-nostd)
 
 This library provides direct casting among trait objects implemented by a type.
+
+`intertrait` supports both `std` and `no_std + alloc` environments. The runtime crate itself is
+`#![no_std]`, but it requires `alloc` because it uses `Box`, `Rc`, `Arc`, and a heap-backed registry.
 
 In Rust, a trait object for a sub-trait of [`std::any::Any`] can be downcast to a concrete type at runtime
 if the type is known. But no direct casting between two trait objects (i.e. without involving the concrete type
@@ -19,11 +22,32 @@ Add the following two dependencies to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-intertrait = "0.2"
+intertrait = { package = "intertrait-nostd", version = "0.2.3" }
 linkme = "0.2"
 ```
 
 The `linkme` dependency is required due to the use of `linkme` macro in the output of `intertrait` macros.
+
+## `no_std` Support
+`intertrait` can be used in `no_std` targets as long as `alloc` is available. No feature toggle is needed.
+
+This means:
+
+* `intertrait` works directly in `std` environments.
+* `intertrait` also works in `no_std` environments with `extern crate alloc`.
+* This is not a pure-`core` crate, because casting support relies on allocation-backed types such as `Box`,
+  `Rc`, and `Arc`.
+
+Minimal `no_std` usage looks like this:
+
+```rust,ignore
+#![no_std]
+
+extern crate alloc;
+
+use intertrait::*;
+use intertrait::cast::*;
+```
 
 # Usage
 
@@ -116,7 +140,7 @@ fn main() {}
 ```
 
 ## `Arc` Support
-`std::sync::Arc` is unique in that it implements `downcast` method only on `dyn Any + Send + Sync + 'static'.
+`Arc` is unique in that it implements `downcast` method only on `dyn Any + Send + Sync + 'static`.
 To use with `Arc`, the following steps should be taken:
 
 * Mark source traits with [`CastFromSync`] instead of [`CastFrom`]
@@ -163,5 +187,5 @@ dual licensed as above, without any additional terms or conditions.
 
 [`std::any::Any`]: https://doc.rust-lang.org/std/any/trait.Any.html
 [`TypeId`]: https://doc.rust-lang.org/std/any/struct.TypeId.html
-[`CastFrom`]: https://docs.rs/intertrait/*/intertrait/trait.CastFrom.html
-[`CastFromSync`]: https://docs.rs/intertrait/*/intertrait/trait.CastFromSync.html
+[`CastFrom`]: https://docs.rs/intertrait-nostd/*/intertrait/trait.CastFrom.html
+[`CastFromSync`]: https://docs.rs/intertrait-nostd/*/intertrait/trait.CastFromSync.html

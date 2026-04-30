@@ -1,3 +1,5 @@
+use alloc::boxed::Box;
+
 use crate::{caster, CastFrom};
 
 /// A trait that is blanket-implemented for traits extending `CastFrom` to allow for casting
