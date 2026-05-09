@@ -1,62 +1,16 @@
 #![no_std]
-//! A library providing direct casting among trait objects implemented by a type.
 //!
-//! In Rust, an object of a sub-trait of [`Any`] can be downcast to a concrete type
-//! at runtime if the type is known. But no direct casting between two trait objects
-//! (i.e. without involving the concrete type of the backing value) is possible
-//! (even no coercion from a trait object to that of its super-trait yet).
+//! This library provides direct casting among trait objects implemented by a type.
 //!
-//! With this crate, any trait object with [`CastFrom`] as its super-trait can be cast directly
-//! to another trait object implemented by the underlying type if the target traits are
-//! registered beforehand with the macros provided by this crate.
+//! ## std usage
 //!
-//! # Usage
-//! ```
-//! use intertrait::*;
-//! use intertrait::cast::*;
+//! This crate is intended for `no_std` usage only.
 //!
-//! struct Data;
+//! Using this crate in a `std` environment will break.
 //!
-//! trait Source: CastFrom {}
+//! If you need `std` usage, use the original `intertrait` crate instead.
 //!
-//! trait Greet {
-//!     fn greet(&self);
-//! }
-//!
-//! #[cast_to]
-//! impl Greet for Data {
-//!     fn greet(&self) {
-//!         println!("Hello");
-//!     }
-//! }
-//!
-//! impl Source for Data {}
-//!
-//! let data = Data;
-//! let source: &dyn Source = &data;
-//! let greet = source.cast::<dyn Greet>();
-//! greet.unwrap().greet();
-//! ```
-//!
-//! Target traits must be explicitly designated beforehand. There are three ways to do it:
-//!
-//! * [`#[cast_to]`][cast_to] to `impl` item
-//! * [`#[cast_to(Trait)]`][cast_to] to type definition
-//! * [`castable_to!(Type => Trait1, Trait2)`][castable_to]
-//!
-//! If the underlying type involved is `Sync + Send` and you want to use it with [`Arc`],
-//! use [`CastFromSync`] in place of [`CastFrom`] and add `[sync]` flag before the list
-//! of traits in the macros. Refer to the documents for each of macros for details.
-//!
-//! For casting, refer to traits defined in [`cast`] module.
-//!
-//! [cast_to]: ./attr.cast_to.html
-//! [castable_to]: ./macro.castable_to.html
-//! [`CastFrom`]: ./trait.CastFrom.html
-//! [`CastFromSync`]: ./trait.CastFromSync.html
-//! [`cast`]: ./cast/index.html
-//! [`Any`]: https://doc.rust-lang.org/core/any/trait.Any.html
-//! [`Arc`]: https://doc.rust-lang.org/alloc/sync/struct.Arc.html
+//! For full details, refer to the original README and docs.
 extern crate alloc;
 
 use alloc::boxed::Box;
