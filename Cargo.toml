@@ -17,7 +17,7 @@ name = "intertrait"
 hashbrown = { version = "0.17", default-features = false }
 spin = { version = "0.10", default-features = false, features = ["lazy"] }
 linkme = "0.2"
-intertrait-macros = { version = "=0.2.3", path = "macros" }
+intertrait-macros = { package = "intertrait-nostd-macros", version = "=0.2.3", path = "macros" }
 
 [dev-dependencies]
 trybuild = "1.0"

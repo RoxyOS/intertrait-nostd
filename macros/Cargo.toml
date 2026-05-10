@@ -1,5 +1,5 @@
 [package]
-name = "intertrait-macros"
+name = "intertrait-nostd-macros"
 description = "Macros for intertrait crate, which allows for direct casting between trait objects"
 version = "0.2.3"
 authors = ["CodeChain Team <hi@codechain.io>"]
